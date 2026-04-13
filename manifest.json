@@ -1,0 +1,15 @@
+{
+  "name": "Macros",
+  "short_name": "Macros",
+  "start_url": "/macros/",
+  "display": "standalone",
+  "background_color": "#0e0e0f",
+  "theme_color": "#0e0e0f",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
