@@ -332,6 +332,11 @@
   .nav-item.active { color: var(--accent); }
   .nav-icon { font-size: 18px; line-height: 1; }
 </style>
+
+<link rel="manifest" href="/macros/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Macros">
 </head>
 <body>
 
@@ -708,6 +713,11 @@ function showToast(msg) {
 
 // ---- Init ----
 renderToday();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/macros/sw.js');
+  }
 </script>
 </body>
 </html>
