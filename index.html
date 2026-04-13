@@ -6,6 +6,10 @@
 <title>Macros</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="manifest" href="/macros/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Macros">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -332,11 +336,6 @@
   .nav-item.active { color: var(--accent); }
   .nav-icon { font-size: 18px; line-height: 1; }
 </style>
-
-<link rel="manifest" href="/macros/manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Macros">
 </head>
 <body>
 
@@ -345,7 +344,11 @@
     <h1>macros</h1>
     <div class="date" id="header-date"></div>
   </div>
-  <button class="export-btn" onclick="exportData()">export JSON</button>
+  <div style="display:flex;gap:8px">
+    <button class="export-btn" onclick="importData()">import</button>
+    <button class="export-btn" onclick="exportData()">export</button>
+  </div>
+  <input type="file" id="import-input" accept=".json" style="display:none" onchange="handleImport(this)">
 </div>
 
 <div class="tabs">
@@ -701,6 +704,32 @@ function exportData() {
   a.href = URL.createObjectURL(blob);
   a.download = 'macros-backup.json';
   a.click();
+}
+
+// ---- Import ----
+function importData() {
+  document.getElementById('import-input').click();
+}
+function handleImport(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (typeof imported !== 'object' || Array.isArray(imported)) throw new Error();
+      const existing = getData();
+      const merged = { ...existing, ...imported };
+      saveData(merged);
+      showToast('imported ' + Object.keys(imported).length + ' days');
+      renderToday();
+      input.value = '';
+    } catch {
+      showToast('invalid file');
+      input.value = '';
+    }
+  };
+  reader.readAsText(file);
 }
 
 // ---- Toast ----
