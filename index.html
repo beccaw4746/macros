@@ -24,27 +24,17 @@
     --protein: #7eb8f7;
     --carbs: #f7c97e;
     --fat: #f77eb8;
+    --over: #f77eb8;
+    --under: #c8f06e;
     --font-ui: 'DM Sans', sans-serif;
     --font-mono: 'DM Mono', monospace;
     --r: 12px;
   }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-ui);
-    font-size: 15px;
-    min-height: 100vh;
-    padding: 0 0 80px;
-    -webkit-font-smoothing: antialiased;
-  }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-ui); font-size: 15px; min-height: 100vh; padding: 0 0 80px; -webkit-font-smoothing: antialiased; }
 
-  /* Loading screen */
-  #loading {
-    position: fixed; inset: 0; background: var(--bg);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 16px; z-index: 999;
-  }
+  /* Loading */
+  #loading { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; z-index: 999; }
   #loading.hidden { display: none; }
   .loading-dots { display: flex; gap: 6px; }
   .loading-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: pulse 1.2s ease-in-out infinite; }
@@ -57,27 +47,29 @@
   .header { padding: 28px 20px 0; display: flex; justify-content: space-between; align-items: flex-start; }
   .header-left h1 { font-size: 22px; font-weight: 500; letter-spacing: -0.5px; }
   .header-left .date { font-size: 12px; color: var(--muted); font-family: var(--font-mono); margin-top: 2px; }
-  .export-btn {
-    background: var(--surface); border: 1px solid var(--border); color: var(--muted);
-    font-size: 12px; font-family: var(--font-mono); padding: 6px 12px; border-radius: 20px;
-    cursor: pointer; transition: color 0.2s, border-color 0.2s;
-  }
+  .export-btn { background: var(--surface); border: 1px solid var(--border); color: var(--muted); font-size: 12px; font-family: var(--font-mono); padding: 6px 12px; border-radius: 20px; cursor: pointer; transition: color 0.2s, border-color 0.2s; }
   .export-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
 
   /* Tabs */
   .tabs { display: flex; gap: 4px; padding: 20px 20px 0; }
-  .tab {
-    flex: 1; padding: 8px; text-align: center; font-size: 13px; font-weight: 500;
-    color: var(--muted); border-bottom: 2px solid transparent; cursor: pointer;
-    transition: color 0.2s, border-color 0.2s; letter-spacing: 0.01em;
-  }
+  .tab { flex: 1; padding: 8px; text-align: center; font-size: 12px; font-weight: 500; color: var(--muted); border-bottom: 2px solid transparent; cursor: pointer; transition: color 0.2s, border-color 0.2s; letter-spacing: 0.01em; }
   .tab.active { color: var(--accent); border-color: var(--accent); }
 
   .section { display: none; padding: 20px; }
   .section.active { display: block; }
 
+  /* Status bar — streak + over/under + remaining */
+  .status-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+  .status-pill { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 10px 8px; text-align: center; }
+  .status-pill-label { font-size: 9px; font-family: var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .status-pill-val { font-size: 15px; font-weight: 500; font-family: var(--font-mono); line-height: 1; }
+  .status-pill-val.on-track { color: var(--accent); }
+  .status-pill-val.over { color: var(--over); }
+  .status-pill-val.neutral { color: var(--muted); }
+  .status-pill-sub { font-size: 9px; color: var(--muted); font-family: var(--font-mono); margin-top: 2px; }
+
   /* Rings */
-  .rings-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .rings-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
   .ring-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 10px; text-align: center; }
   .ring-label { font-size: 10px; font-family: var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
   .ring-val { font-size: 20px; font-weight: 500; font-family: var(--font-mono); line-height: 1; }
@@ -88,7 +80,7 @@
   .ring-unit { font-size: 10px; color: var(--muted); margin-top: 2px; font-family: var(--font-mono); }
 
   /* Progress bars */
-  .progress-row { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .progress-row { margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px; }
   .progress-meta { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; color: var(--muted); }
   .progress-meta span:last-child { font-family: var(--font-mono); }
   .bar-track { height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
@@ -103,37 +95,19 @@
   .card-title { font-size: 11px; font-family: var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
   .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
   .input-group label { display: block; font-size: 11px; color: var(--muted); font-family: var(--font-mono); margin-bottom: 5px; letter-spacing: 0.04em; }
-  .input-group input {
-    width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
-    padding: 10px 12px; font-size: 15px; font-family: var(--font-mono); color: var(--text);
-    outline: none; transition: border-color 0.2s; -webkit-appearance: none;
-  }
+  .input-group input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 15px; font-family: var(--font-mono); color: var(--text); outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
   .input-group input:focus { border-color: rgba(255,255,255,0.25); }
   .input-group input::placeholder { color: var(--muted); }
-
-  .log-btn {
-    width: 100%; background: var(--accent); color: #0e0e0f; border: none; border-radius: 8px;
-    padding: 12px; font-size: 14px; font-weight: 500; font-family: var(--font-ui);
-    cursor: pointer; transition: opacity 0.15s, transform 0.1s; letter-spacing: 0.01em;
-  }
+  .log-btn { width: 100%; background: var(--accent); color: #0e0e0f; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 500; font-family: var(--font-ui); cursor: pointer; transition: opacity 0.15s, transform 0.1s; letter-spacing: 0.01em; }
   .log-btn:active { transform: scale(0.98); opacity: 0.9; }
 
   /* Toast */
-  .toast {
-    position: fixed; bottom: 90px; left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--accent); color: #0e0e0f; font-size: 13px; font-weight: 500;
-    padding: 8px 18px; border-radius: 20px; opacity: 0;
-    transition: opacity 0.2s, transform 0.2s; pointer-events: none; white-space: nowrap;
-  }
+  .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--accent); color: #0e0e0f; font-size: 13px; font-weight: 500; padding: 8px 18px; border-radius: 20px; opacity: 0; transition: opacity 0.2s, transform 0.2s; pointer-events: none; white-space: nowrap; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   /* Log list */
   .log-list { display: flex; flex-direction: column; gap: 8px; }
-  .log-entry {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--r);
-    padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;
-  }
+  .log-entry { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; }
   .log-entry-left { display: flex; flex-direction: column; gap: 3px; }
   .log-entry-time { font-size: 11px; color: var(--muted); font-family: var(--font-mono); }
   .log-entry-macros { font-size: 13px; color: var(--muted); }
@@ -151,6 +125,33 @@
   .legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); font-family: var(--font-mono); }
   .legend-dot { width: 7px; height: 7px; border-radius: 50%; }
 
+  /* Weekly summary */
+  .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 16px; }
+  .week-day { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 4px; text-align: center; }
+  .week-day-label { font-size: 9px; font-family: var(--font-mono); color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+  .week-day-kcal { font-size: 12px; font-weight: 500; font-family: var(--font-mono); color: var(--accent); line-height: 1; }
+  .week-day-kcal.empty { color: var(--surface2); }
+  .week-day-bar { height: 3px; border-radius: 2px; margin-top: 4px; background: var(--surface2); overflow: hidden; }
+  .week-day-bar-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width 0.4s; }
+  .week-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+  .week-stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 12px; text-align: center; }
+  .week-stat-label { font-size: 10px; font-family: var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .week-stat-val { font-size: 16px; font-weight: 500; font-family: var(--font-mono); color: var(--text); }
+
+  /* Body weight */
+  .weight-input-row { display: flex; gap: 8px; margin-bottom: 14px; }
+  .weight-input-row input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 15px; font-family: var(--font-mono); color: var(--text); outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
+  .weight-input-row input:focus { border-color: rgba(255,255,255,0.25); }
+  .weight-input-row input::placeholder { color: var(--muted); }
+  .weight-log-btn { background: var(--accent); color: #0e0e0f; border: none; border-radius: 8px; padding: 10px 18px; font-size: 14px; font-weight: 500; font-family: var(--font-ui); cursor: pointer; white-space: nowrap; }
+  .weight-entry { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .weight-entry:last-child { border-bottom: none; }
+  .weight-entry-date { font-size: 11px; color: var(--muted); font-family: var(--font-mono); }
+  .weight-entry-val { font-size: 16px; font-weight: 500; font-family: var(--font-mono); color: var(--text); }
+  .weight-entry-delta { font-size: 11px; font-family: var(--font-mono); margin-left: 6px; }
+  .weight-entry-delta.up { color: var(--over); }
+  .weight-entry-delta.down { color: var(--accent); }
+
   .targets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 </style>
 </head>
@@ -158,9 +159,7 @@
 
 <div id="loading">
   <div class="loading-dots">
-    <div class="loading-dot"></div>
-    <div class="loading-dot"></div>
-    <div class="loading-dot"></div>
+    <div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div>
   </div>
   <div class="loading-label">loading db...</div>
 </div>
@@ -181,18 +180,43 @@
   <div class="tab active" onclick="switchTab('today')">today</div>
   <div class="tab" onclick="switchTab('log')">log</div>
   <div class="tab" onclick="switchTab('trends')">trends</div>
+  <div class="tab" onclick="switchTab('weight')">weight</div>
   <div class="tab" onclick="switchTab('targets')">targets</div>
 </div>
 
 <!-- TODAY -->
 <div class="section active" id="tab-today">
+  <!-- Status bar: streak / remaining / over-under -->
+  <div class="status-bar">
+    <div class="status-pill">
+      <div class="status-pill-label">streak</div>
+      <div class="status-pill-val neutral" id="streak-val">0</div>
+      <div class="status-pill-sub">days logged</div>
+    </div>
+    <div class="status-pill">
+      <div class="status-pill-label">remaining</div>
+      <div class="status-pill-val on-track" id="remaining-val">—</div>
+      <div class="status-pill-sub">kcal left</div>
+    </div>
+    <div class="status-pill">
+      <div class="status-pill-label">status</div>
+      <div class="status-pill-val neutral" id="status-val">—</div>
+      <div class="status-pill-sub" id="status-sub">no entries yet</div>
+    </div>
+  </div>
+
+  <!-- Macro totals -->
   <div class="rings-row">
     <div class="ring-card"><div class="ring-label">kcal</div><div class="ring-val kcal" id="today-kcal">0</div><div class="ring-unit">cal</div></div>
     <div class="ring-card"><div class="ring-label">protein</div><div class="ring-val protein" id="today-protein">0</div><div class="ring-unit">g</div></div>
     <div class="ring-card"><div class="ring-label">carbs</div><div class="ring-val carbs" id="today-carbs">0</div><div class="ring-unit">g</div></div>
     <div class="ring-card"><div class="ring-label">fat</div><div class="ring-val fat" id="today-fat">0</div><div class="ring-unit">g</div></div>
   </div>
+
+  <!-- Progress bars -->
   <div class="progress-row" id="progress-bars"></div>
+
+  <!-- Add entry -->
   <div class="card">
     <div class="card-title">add entry</div>
     <div class="input-grid">
@@ -217,6 +241,12 @@
 
 <!-- TRENDS -->
 <div class="section" id="tab-trends">
+  <!-- Weekly summary -->
+  <div class="card-title" style="font-size:11px;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">this week</div>
+  <div class="week-grid" id="week-grid"></div>
+  <div class="week-stats" id="week-stats"></div>
+
+  <!-- 30d charts -->
   <div class="chart-wrap">
     <div class="chart-header">
       <span class="chart-title">daily calories — 30d</span>
@@ -234,6 +264,31 @@
       </div>
     </div>
     <canvas id="macro-chart" height="160"></canvas>
+  </div>
+</div>
+
+<!-- WEIGHT -->
+<div class="section" id="tab-weight">
+  <div class="card">
+    <div class="card-title">log weight</div>
+    <div class="weight-input-row">
+      <input type="number" id="in-weight" placeholder="e.g. 74.5" inputmode="decimal" step="0.1">
+      <select id="in-weight-unit" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 8px;font-size:14px;font-family:var(--font-mono);color:var(--text);outline:none;">
+        <option value="kg">kg</option>
+        <option value="lbs">lbs</option>
+      </select>
+      <button class="weight-log-btn" onclick="addWeight()">log</button>
+    </div>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-header">
+      <span class="chart-title">body weight — 90d</span>
+    </div>
+    <canvas id="weight-chart" height="180"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-title">recent entries</div>
+    <div id="weight-list"></div>
   </div>
 </div>
 
@@ -257,7 +312,7 @@
 import { PGlite } from 'https://cdn.jsdelivr.net/npm/@electric-sql/pglite/dist/index.js';
 
 let db;
-let kcalChart, macroChart;
+let kcalChart, macroChart, weightChart;
 
 // ---- DB init ----
 async function initDB() {
@@ -280,6 +335,12 @@ async function initDB() {
       carbs INTEGER NOT NULL DEFAULT 200,
       fat INTEGER NOT NULL DEFAULT 65
     );
+    CREATE TABLE IF NOT EXISTS weight_log (
+      id SERIAL PRIMARY KEY,
+      date TEXT NOT NULL,
+      weight REAL NOT NULL,
+      unit TEXT NOT NULL DEFAULT 'kg'
+    );
     INSERT INTO targets (id, kcal, protein, carbs, fat)
     VALUES (1, 2000, 150, 200, 65)
     ON CONFLICT (id) DO NOTHING;
@@ -288,6 +349,12 @@ async function initDB() {
 
 // ---- Helpers ----
 const todayKey = () => new Date().toISOString().split('T')[0];
+
+function dateKey(daysAgo) {
+  const d = new Date();
+  d.setDate(d.getDate() - daysAgo);
+  return d.toISOString().split('T')[0];
+}
 
 async function getTargets() {
   const res = await db.query('SELECT * FROM targets WHERE id = 1');
@@ -299,23 +366,41 @@ async function getTodayEntries() {
   return res.rows;
 }
 
+async function getDayTotals(key) {
+  const res = await db.query(
+    `SELECT COALESCE(SUM(kcal),0) as kcal, COALESCE(SUM(protein),0) as protein,
+     COALESCE(SUM(carbs),0) as carbs, COALESCE(SUM(fat),0) as fat
+     FROM entries WHERE date = $1`, [key]
+  );
+  return res.rows[0];
+}
+
 async function getLast30Days() {
   const days = [];
   for (let i = 29; i >= 0; i--) {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-    const key = date.toISOString().split('T')[0];
-    const res = await db.query(
-      `SELECT COALESCE(SUM(kcal),0) as kcal, COALESCE(SUM(protein),0) as protein,
-       COALESCE(SUM(carbs),0) as carbs, COALESCE(SUM(fat),0) as fat
-       FROM entries WHERE date = $1`, [key]
-    );
-    days.push({ label: date.toLocaleDateString('en-GB', {day:'numeric', month:'short'}), ...res.rows[0] });
+    const key = dateKey(i);
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const totals = await getDayTotals(key);
+    days.push({ label: d.toLocaleDateString('en-GB', {day:'numeric', month:'short'}), ...totals });
   }
   return days;
 }
 
-// ---- Date ----
+async function getStreak() {
+  let streak = 0;
+  let i = 0;
+  while (true) {
+    const key = dateKey(i);
+    const res = await db.query('SELECT COUNT(*) as cnt FROM entries WHERE date = $1', [key]);
+    if (parseInt(res.rows[0].cnt) === 0) break;
+    streak++;
+    i++;
+    if (i > 365) break;
+  }
+  return streak;
+}
+
+// ---- Date header ----
 document.getElementById('header-date').textContent = new Date().toLocaleDateString('en-GB', {weekday:'long',day:'numeric',month:'short'}).toLowerCase();
 
 // ---- Tabs ----
@@ -323,10 +408,11 @@ window.switchTab = function(name) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
-  document.querySelectorAll('.tab')[['today','log','trends','targets'].indexOf(name)].classList.add('active');
+  document.querySelectorAll('.tab')[['today','log','trends','weight','targets'].indexOf(name)].classList.add('active');
   if (name === 'trends') renderCharts();
   if (name === 'log') renderLog();
   if (name === 'targets') loadTargetInputs();
+  if (name === 'weight') renderWeight();
 };
 
 // ---- Add entry ----
@@ -362,6 +448,8 @@ async function renderToday() {
   document.getElementById('today-fat').textContent = Math.round(totals.fat);
 
   const targets = await getTargets();
+
+  // Progress bars
   const bars = [
     {key:'kcal', label:'Calories', unit:'kcal'},
     {key:'protein', label:'Protein', unit:'g'},
@@ -381,6 +469,42 @@ async function renderToday() {
         <div class="bar-track"><div class="bar-fill ${b.key}" style="width:${pct}%"></div></div>
       </div>`;
   });
+
+  // Status bar
+  const streak = await getStreak();
+  const remaining = targets.kcal - Math.round(totals.kcal);
+  const pctOfTarget = totals.kcal / targets.kcal;
+
+  // Streak
+  const streakEl = document.getElementById('streak-val');
+  streakEl.textContent = streak;
+  streakEl.className = 'status-pill-val ' + (streak >= 3 ? 'on-track' : 'neutral');
+
+  // Remaining
+  const remEl = document.getElementById('remaining-val');
+  remEl.textContent = remaining > 0 ? remaining : 0;
+  remEl.className = 'status-pill-val ' + (remaining >= 0 ? 'on-track' : 'over');
+
+  // Over/under status
+  const statusEl = document.getElementById('status-val');
+  const statusSub = document.getElementById('status-sub');
+  if (entries.length === 0) {
+    statusEl.textContent = '—';
+    statusEl.className = 'status-pill-val neutral';
+    statusSub.textContent = 'no entries yet';
+  } else if (remaining < 0) {
+    statusEl.textContent = '+' + Math.abs(remaining);
+    statusEl.className = 'status-pill-val over';
+    statusSub.textContent = 'kcal over';
+  } else if (pctOfTarget >= 0.9) {
+    statusEl.textContent = 'on track';
+    statusEl.className = 'status-pill-val on-track';
+    statusSub.textContent = Math.round(pctOfTarget * 100) + '% of target';
+  } else {
+    statusEl.textContent = remaining;
+    statusEl.className = 'status-pill-val neutral';
+    statusSub.textContent = 'kcal to go';
+  }
 }
 
 // ---- Render log ----
@@ -415,8 +539,55 @@ window.deleteEntry = async function(id) {
   showToast('removed');
 };
 
+// ---- Weekly summary ----
+async function renderWeeklySummary() {
+  const targets = await getTargets();
+  const days = [];
+  const dayLabels = ['M','T','W','T','F','S','S'];
+
+  // Get start of this week (Monday)
+  const now = new Date();
+  const dow = now.getDay(); // 0=Sun
+  const mondayOffset = dow === 0 ? 6 : dow - 1;
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(now);
+    d.setDate(now.getDate() - mondayOffset + i);
+    const key = d.toISOString().split('T')[0];
+    const totals = await getDayTotals(key);
+    const isPast = d <= now;
+    days.push({ label: dayLabels[i], key, totals, isPast, isToday: key === todayKey() });
+  }
+
+  // Week grid
+  const grid = document.getElementById('week-grid');
+  grid.innerHTML = days.map(d => {
+    const pct = Math.min(100, d.totals.kcal > 0 ? Math.round((d.totals.kcal / targets.kcal) * 100) : 0);
+    const hasData = d.totals.kcal > 0;
+    return `
+      <div class="week-day" style="${d.isToday ? 'border-color:rgba(200,240,110,0.3)' : ''}">
+        <div class="week-day-label">${d.label}</div>
+        <div class="week-day-kcal ${hasData ? '' : 'empty'}">${hasData ? Math.round(d.totals.kcal) : '·'}</div>
+        <div class="week-day-bar"><div class="week-day-bar-fill" style="width:${pct}%"></div></div>
+      </div>`;
+  }).join('');
+
+  // Week stats
+  const loggedDays = days.filter(d => d.totals.kcal > 0);
+  const totalKcal = loggedDays.reduce((s, d) => s + d.totals.kcal, 0);
+  const avgKcal = loggedDays.length > 0 ? Math.round(totalKcal / loggedDays.length) : 0;
+  const avgProtein = loggedDays.length > 0 ? Math.round(loggedDays.reduce((s, d) => s + d.totals.protein, 0) / loggedDays.length) : 0;
+
+  document.getElementById('week-stats').innerHTML = `
+    <div class="week-stat"><div class="week-stat-label">avg kcal</div><div class="week-stat-val">${avgKcal}</div></div>
+    <div class="week-stat"><div class="week-stat-label">avg protein</div><div class="week-stat-val">${avgProtein}g</div></div>
+    <div class="week-stat"><div class="week-stat-label">days logged</div><div class="week-stat-val">${loggedDays.length}/7</div></div>`;
+}
+
 // ---- Charts ----
 async function renderCharts() {
+  await renderWeeklySummary();
+
   const days = await getLast30Days();
   const labels = days.map(d => d.label);
   const targets = await getTargets();
@@ -464,6 +635,85 @@ async function renderCharts() {
   });
 }
 
+// ---- Weight ----
+window.addWeight = async function() {
+  const val = parseFloat(document.getElementById('in-weight').value);
+  const unit = document.getElementById('in-weight-unit').value;
+  if (!val || val <= 0) { showToast('enter a weight'); return; }
+  await db.query(
+    'INSERT INTO weight_log (date, weight, unit) VALUES ($1,$2,$3)',
+    [todayKey(), val, unit]
+  );
+  document.getElementById('in-weight').value = '';
+  showToast('weight logged');
+  renderWeight();
+};
+
+async function renderWeight() {
+  const res = await db.query('SELECT * FROM weight_log ORDER BY date DESC, id DESC LIMIT 90');
+  const entries = res.rows;
+
+  // Chart (oldest first)
+  const chartEntries = [...entries].reverse();
+  const gridColor = 'rgba(255,255,255,0.05)';
+  const tickColor = '#6b6b70';
+
+  if (weightChart) weightChart.destroy();
+  if (chartEntries.length > 0) {
+    weightChart = new Chart(document.getElementById('weight-chart'), {
+      type: 'line',
+      data: {
+        labels: chartEntries.map(e => e.date.slice(5)),
+        datasets: [{
+          data: chartEntries.map(e => e.weight),
+          borderColor: '#c8f06e',
+          backgroundColor: 'rgba(200,240,110,0.06)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 3,
+          pointBackgroundColor: '#c8f06e',
+          borderWidth: 1.5,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false }, tooltip: {
+          backgroundColor: '#1a1a1c', titleColor: '#f0ede8', bodyColor: '#6b6b70',
+          borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, padding: 10,
+        }},
+        scales: {
+          x: { grid: { color: gridColor }, ticks: { color: tickColor, font: { family: 'DM Mono', size: 10 }, maxTicksLimit: 10 }},
+          y: { grid: { color: gridColor }, ticks: { color: tickColor, font: { family: 'DM Mono', size: 10 }}}
+        }
+      }
+    });
+  }
+
+  // Recent list (top 10)
+  const list = document.getElementById('weight-list');
+  if (!entries.length) {
+    list.innerHTML = '<div class="empty-state" style="padding:20px 0">No weight entries yet.</div>';
+    return;
+  }
+  list.innerHTML = entries.slice(0, 10).map((e, i) => {
+    const prev = entries[i + 1];
+    let delta = '';
+    if (prev && prev.unit === e.unit) {
+      const diff = parseFloat((e.weight - prev.weight).toFixed(1));
+      if (diff !== 0) delta = `<span class="weight-entry-delta ${diff > 0 ? 'up' : 'down'}">${diff > 0 ? '+' : ''}${diff}</span>`;
+    }
+    return `
+      <div class="weight-entry">
+        <div class="weight-entry-date">${e.date}</div>
+        <div style="display:flex;align-items:baseline;gap:2px">
+          <div class="weight-entry-val">${e.weight}</div>
+          <span style="font-size:11px;color:var(--muted);font-family:var(--font-mono);margin-left:3px">${e.unit}</span>
+          ${delta}
+        </div>
+      </div>`;
+  }).join('');
+}
+
 // ---- Targets ----
 async function loadTargetInputs() {
   const t = await getTargets();
@@ -485,9 +735,10 @@ window.saveTargets = async function() {
 
 // ---- Export ----
 window.exportData = async function() {
-  const res = await db.query('SELECT * FROM entries ORDER BY date ASC, id ASC');
+  const entries = await db.query('SELECT * FROM entries ORDER BY date ASC, id ASC');
+  const weights = await db.query('SELECT * FROM weight_log ORDER BY date ASC, id ASC');
   const targets = await getTargets();
-  const blob = new Blob([JSON.stringify({ entries: res.rows, targets }, null, 2)], {type: 'application/json'});
+  const blob = new Blob([JSON.stringify({ entries: entries.rows, weight_log: weights.rows, targets }, null, 2)], {type: 'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'macros-backup.json';
@@ -504,36 +755,31 @@ window.handleImport = async function(input) {
   reader.onload = async e => {
     try {
       const parsed = JSON.parse(e.target.result);
-      let entries = [];
-      let targets = null;
+      let entries = [], weights = [], targets = null;
 
       if (parsed.entries && Array.isArray(parsed.entries)) {
-        // New PGlite export format
         entries = parsed.entries;
+        weights = parsed.weight_log || [];
         targets = parsed.targets || null;
       } else if (typeof parsed === 'object') {
-        // Legacy localStorage format: {"2024-01-01": [{kcal,...}]}
         for (const [date, dayEntries] of Object.entries(parsed)) {
           if (Array.isArray(dayEntries)) {
-            dayEntries.forEach(en => entries.push({
-              date, time: en.time || '00:00',
-              kcal: en.kcal||0, protein: en.protein||0, carbs: en.carbs||0, fat: en.fat||0, note: en.note||''
-            }));
+            dayEntries.forEach(en => entries.push({ date, time: en.time||'00:00', kcal: en.kcal||0, protein: en.protein||0, carbs: en.carbs||0, fat: en.fat||0, note: en.note||'' }));
           }
         }
       }
 
       for (const en of entries) {
-        await db.query(
-          'INSERT INTO entries (date, time, kcal, protein, carbs, fat, note) VALUES ($1,$2,$3,$4,$5,$6,$7)',
-          [en.date, en.time||'00:00', en.kcal||0, en.protein||0, en.carbs||0, en.fat||0, en.note||'']
-        );
+        await db.query('INSERT INTO entries (date, time, kcal, protein, carbs, fat, note) VALUES ($1,$2,$3,$4,$5,$6,$7)',
+          [en.date, en.time||'00:00', en.kcal||0, en.protein||0, en.carbs||0, en.fat||0, en.note||'']);
+      }
+      for (const w of weights) {
+        await db.query('INSERT INTO weight_log (date, weight, unit) VALUES ($1,$2,$3)', [w.date, w.weight, w.unit||'kg']);
       }
       if (targets) {
         await db.query('UPDATE targets SET kcal=$1, protein=$2, carbs=$3, fat=$4 WHERE id=1',
           [targets.kcal||2000, targets.protein||150, targets.carbs||200, targets.fat||65]);
       }
-
       showToast('imported ' + entries.length + ' entries');
       renderToday();
       input.value = '';
